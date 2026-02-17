@@ -1,7 +1,9 @@
 const mongoose  = require("mongoose")
 
+const config = require("../conf/config");
+
 const connectDB = async () => {
-    await mongoose.connect("mongodb+srv://kunalkhandelwal108:Kunal892004@cluster0.dr7nbal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    await mongoose.connect(config.mongoUri)
     .then(() =>{
         console.log("Database connected")
     })

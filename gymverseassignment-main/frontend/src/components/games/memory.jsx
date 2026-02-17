@@ -68,16 +68,16 @@ function App() {
     }, []);
 
     return (
-        <div className="App flex flex-col justify-center items-center h-screen bg-gray-100">
-           <h1 className=" text-white bg-slate-500 outline-slate-600 p-3 outline text-4xl font-serif mb-3 font-extrabold">Fitness Memory Game</h1>
+        <div className="App flex flex-col justify-center items-center h-screen bg-gray-900">
+           <h1 className=" text-blue-300 bg-gray-800 outline-gray-700 p-3 outline text-4xl font-serif mb-6 font-extrabold rounded-lg shadow-lg">Fitness Memory Game</h1>
 
             <button
                 onClick={shuffleCards}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-bold"
+                className="mb-6 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-500 font-bold shadow-lg transition-transform transform hover:scale-105"
             >
                 New Game
             </button>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 p-4 bg-gray-800 rounded-xl shadow-2xl">
                 {cards.map((card) => (
                     <Card
                         key={card.id}
@@ -87,7 +87,7 @@ function App() {
                     />
                 ))}
             </div>
-            <p className="mt-4 text-xl">Turns: {turns}</p>
+            <p className="mt-6 text-2xl text-gray-300 font-bold">Turns: {turns}</p>
         </div>
     );
 }

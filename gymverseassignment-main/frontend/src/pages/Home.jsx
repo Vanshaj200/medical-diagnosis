@@ -1,5 +1,4 @@
 import React from 'react'
-import Contact from './Contact';
 import Lottie from "lottie-react";
 import gif from "../media/Animation - 1720638512048.json"
 import giff from "../media/Animation - 1719504456561.json"
@@ -14,7 +13,6 @@ import { SimpleGrid, Box, Heading, Text, Button, useBreakpointValue, Flex, Spinn
 import { useUser } from '@clerk/clerk-react';
 import { useAuthStore } from '../context/store';
 import AppointmentHero from '../components/AppointmentHero';
-import Navbar from '../components/Navbar';
 import yog from '../photos/depositphotos_85221854-stock-photo-group-of-happy-friends-exercising.jpg'
 import bot from '../photos/1714394648414.jpg'
 import qtt from '../photos/29363-Fred-DeVito-Quote-If-it-doesn-t-challenge-you-it-doesn-t-change.jpg'
@@ -24,9 +22,6 @@ export default function Home() {
   const { user, isLoaded, isSignedIn } = useUser();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const navigate = useNavigate()
-
-
-
 
 
   const handleBooking = () => {
@@ -72,9 +67,6 @@ export default function Home() {
 
             <section className=" bg-gradient-to-br from-gray-700 via-gray-900 to-gray-950">
 
-
-              <Navbar />
-
               <AppointmentHero />
 
 
@@ -84,6 +76,7 @@ export default function Home() {
                 <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
 
                   <img
+                    alt="Yoga"
                     src={yog} className='rounded-e-full'
                   />
                 </div>
@@ -124,10 +117,9 @@ export default function Home() {
               columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
               spacing={8}
               p={8}
-              bg="gray.50"
+              bg="whiteAlpha.100"
               borderRadius="lg"
               boxShadow="md"
-              bgColor="blue.50"
             >
               <a href="#games">
                 <Card
@@ -162,15 +154,14 @@ export default function Home() {
               justify="center"
               gap={8}
               p={8}
-              bg="gray.50"
+              bg="whiteAlpha.100"
               borderRadius="md"
               boxShadow="md"
               minH="400px"
               id='chatBot'
-              bgColor="blue.50"
             >
               <Box textAlign={isMobile ? 'center' : 'left'}>
-                <Heading as="h2" size="xl" color="gray.800" mb={4}>
+                <Heading as="h2" size="xl" color="white" mb={4}>
                   Access AI-Driven Medical Consultations
                 </Heading>
                 <Text fontSize="lg" color="gray.600" mb={6}>
@@ -192,26 +183,12 @@ export default function Home() {
                 </Link>
               </Box>
               <Box w="full" maxW="md" mx="auto">
-                <img src={bot} className='rounded-xl' />
+                <img src={bot} alt="Chatbot" className='rounded-xl' />
               </Box>
             </Flex>
 
             <div>
               <News />
-            </div>
-
-
-            <div>
-              <footer className="  py-6">
-                <div className="container mx-auto text-center">
-                  <p className="mb-4 text-black">© 2024 OnlySolution. All rights reserved.</p>
-                  <div className="flex justify-center space-x-4">
-                    <a href="#" className="hover:text-gray-400 text-black">Privacy Policy</a>
-                    <a href="#" className="hover:text-gray-400 text-black">Terms of Service</a>
-                    <a href="/Contact" className="hover:text-gray-400 text-black">Contact Us</a>
-                  </div>
-                </div>
-              </footer>
             </div>
 
           </div>

@@ -100,19 +100,19 @@ export default function News() {
   ];
 
   return (
-    <Box bg="blue.50" py={10} px={{ base: 4, md: 8 }}>
+    <Box py={10} px={{ base: 4, md: 8 }}>
       <Box maxW="container.xl" mx="auto">
         <Slider {...settings}>
           {newsData.map((element, index) => (
             <Box
               key={index}
-              bg="white"
+              bg="gray.800"
               borderRadius="xl"
               boxShadow="lg"
               minHeight={'472px'}
               overflow="hidden"
               transition="all 0.3s ease"
-              _hover={{ boxShadow: "2xl", transform: "scale(1.02)" }}
+              _hover={{ boxShadow: "2xl", transform: "scale(1.02)", bg: "gray.700" }}
               p={4}
               display="flex"
               flexDirection="column"
@@ -129,17 +129,17 @@ export default function News() {
                 mb={4}
               />
               <VStack align="start" spacing={3} p={4} flex="1" overflow="hidden">
-                <Heading as="h3" size="md" color="blue.600" noOfLines={2}>
+                <Heading as="h3" size="md" color="blue.300" noOfLines={2}>
                   {element.title}
                 </Heading>
-                <Text color="gray.600" noOfLines={3} overflow="hidden" textOverflow="ellipsis" >
+                <Text color="gray.300" noOfLines={3} overflow="hidden" textOverflow="ellipsis" >
                   {element.description}
                 </Text>
                 <Flex justify="space-between" align="unset" width="full">
-                  <Text color="gray.500" fontSize="xs">
+                  <Text color="gray.400" fontSize="xs">
                     {element.date} | {element.source}
                   </Text>
-                  <Link href={element.link} isExternal color="blue.500" fontWeight="bold" display="flex" alignItems="center" fontSize={'sm'}>
+                  <Link href={element.link} isExternal color="blue.400" fontWeight="bold" display="flex" alignItems="center" fontSize={'sm'}>
                     Read more <ArrowForwardIcon ml={1} />
                   </Link>
                 </Flex>

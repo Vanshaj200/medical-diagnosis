@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import News from "./pages/News"
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
@@ -12,66 +12,49 @@ import Memory from "./components/games/memory";
 import Catch from "./components/games/Catch";
 import Tracker from "./pages/Tracker";
 import "./index.css"
-import { useUser, RedirectToSignIn } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { useAuthStore } from "./context/store";
 import AdminDashboard from "./pages/admin/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/auth/Login";
 import Profile from './pages/admin/Profile'
 import { ChakraProvider } from '@chakra-ui/react'
-import Footer from "./components/footer";
+import Layout from "./components/Layout";
 
 
+
+import theme from "./theme";
 
 function App() {
   const { isLoaded, user } = useUser()
   const { setUser } = useAuthStore()
+  
+  if (isLoaded && user) {
+    setUser(user, user.publicMetadata?.role)
+  }
+
   return (
-    <div>
-
-
-      <Routes>
-        <Route path="/" element={<ChakraProvider><Home /></ChakraProvider>} />
-        <Route path="/news" element={<ChakraProvider>
-          <News />
-        </ChakraProvider>} />
-        <Route path="/Contact" element={<ChakraProvider>
-          <Contact />
-        </ChakraProvider>} />
-        <Route path="/Fitness" element={<Fitness />} />
+    <ChakraProvider theme={theme}>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/Fitness" element={<Fitness />} />
        
-        <Route path="/Bmi" element={<ChakraProvider>
-          <Bmi />
-        </ChakraProvider>} />
-        <Route path="/Fitness/exercise/:id" element={
-          <ExerciseDetail />
-        } />
-        <Route path="/Aibot" element={<ChakraProvider>
-          <Aibot />
-        </ChakraProvider>} />
-        <Route path="/Games" element={<ChakraProvider>
-          <Games />
-        </ChakraProvider>} />
-        <Route path="/Memory" element={<ChakraProvider>
-          <Memory />
-        </ChakraProvider>} />
-        <Route path="/Catch" element={<ChakraProvider>
-          <Catch />
-        </ChakraProvider>} />
-        <Route path="/Tracker/*" element={<ChakraProvider>
-          <ProtectedRoute><Tracker /></ProtectedRoute>
-        </ChakraProvider>} />
-        <Route path="/login" element={!user ? <ChakraProvider>
-          <Login />
-        </ChakraProvider> : ""} />
-        <Route path="/admin-dashboard/*" element={<ChakraProvider>
-          <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
-        </ChakraProvider>} />
-        <Route path="/profile/*" element={user ? <ChakraProvider>
-          <Profile />
-        </ChakraProvider> : <Navigate to={'/'} />} />
-      </Routes>
-    </div>
+          <Route path="/Bmi" element={<Bmi />} />
+          <Route path="/Fitness/exercise/:id" element={<ExerciseDetail />} />
+          <Route path="/Aibot" element={<Aibot />} />
+          <Route path="/Games" element={<Games />} />
+          <Route path="/Memory" element={<Memory />} />
+          <Route path="/Catch" element={<Catch />} />
+          <Route path="/Tracker/*" element={<ProtectedRoute><Tracker /></ProtectedRoute>} />
+          <Route path="/login" element={!user ? <Login /> : ""} />
+          <Route path="/admin-dashboard/*" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/profile/*" element={user ? <Profile /> : <Navigate to={'/'} />} />
+        </Routes>
+      </Layout>
+    </ChakraProvider>
 
   );
 }

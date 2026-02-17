@@ -30,7 +30,7 @@ const Navbar = () => {
   };
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" p="2" color="white">
+    <Flex justifyContent="space-between" alignItems="center" p="2" bg="gray.900" color="white">
       {/* Logo */}
       <Link to={'/'}>
         <img src={logo} width="60px" className="rounded-full ml-1 mt-1" alt="Virtual GymVerse" />

@@ -3,19 +3,9 @@
 
 .App {
   text-align: center;
-  background: linear-gradient(to bottom, 
-  #f0f4f8 0%,    /* Lighter color at the top */
-  #c7def3 40%,   /* Slightly darker color in the middle */
-  #ffffff 100%   /* White color at the bottom */
-);
 }
 
 .App-header {
-  background: linear-gradient(to bottom, 
-  #f0f4f8 0%,    /* Lighter color at the top */
-  #c7def3 40%,   /* Slightly darker color in the middle */
-  #ffffff 100%   /* White color at the bottom */
-);
   padding: 20px;
   display: flex;
   justify-content: center;

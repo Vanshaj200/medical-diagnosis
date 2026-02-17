@@ -8,9 +8,9 @@ const Basket = ({ x, onMouseDown, onTouchStart }) => {
                 left: `${x}px`,
                 width: '100px',
                 height: '50px',
-                backgroundColor: '#8B4513',
+                backgroundColor: '#D2691E', // Chocolate color for better visibility
                 borderRadius: '5px',
-                border: '2px solid #333',
+                border: '2px solid #FFF', // White border for contrast
                 cursor: 'move',
             }}
             onMouseDown={onMouseDown}

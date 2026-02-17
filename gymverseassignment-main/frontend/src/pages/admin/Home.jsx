@@ -109,7 +109,8 @@ const ProfilePage = () => {
               name="fullname"
               value={formData.name}
               onChange={handleInputChange}
-              bg="white"
+              bg="gray.800"
+              color="white"
             />
           </FormControl>
           <FormControl>
@@ -137,7 +138,8 @@ const ProfilePage = () => {
               name="experience"
               value={formData.experience}
               onChange={handleInputChange}
-              bg="white"
+              bg="gray.800"
+              color="white"
             />
           </FormControl>
           <FormControl>
@@ -146,7 +148,8 @@ const ProfilePage = () => {
               name="qualifications"
               value={formData.qualifications}
               onChange={handleInputChange}
-              bg="white"
+              bg="gray.800"
+              color="white"
             />
           </FormControl>
           <FormControl>
@@ -155,7 +158,8 @@ const ProfilePage = () => {
               name="specialization"
               value={formData.specialization}
               onChange={handleInputChange}
-              bg="white"
+              bg="gray.800"
+              color="white"
             >
 
               <option value="Trichologist">Trichologist</option>

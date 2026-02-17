@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../../components/Navbar';
 import { Routes, Route, Link } from "react-router-dom";
 import { Box, Flex, VStack, List, ListItem, Button, useDisclosure, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Text } from '@chakra-ui/react';
 import { SignOutButton, useUser, useAuth } from '@clerk/clerk-react';
@@ -40,7 +39,7 @@ const AdminDashboard = () => {
   }, [getToken, user?.id, isAdmin, user?.publicMetadata.role])
   return (
     <Box bg="gray.900" minH="100vh">
-      <Navbar />
+      
       <Flex direction="row" bg="gray.900" borderTop="1px" borderColor="gray.700">
         <Box
           display={{ base: 'none', md: 'block' }} // Hide on mobile

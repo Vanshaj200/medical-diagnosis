@@ -4,7 +4,6 @@ import { Box, Flex, VStack, List, ListItem, Button, useDisclosure, IconButton, D
 import { SignOutButton } from '@clerk/clerk-react';
 import Activity from './Activity';
 
-import Navbar from '../components/Navbar';
 import { HamburgerIcon } from '@chakra-ui/icons';
 
 import { useUser, useAuth } from '@clerk/clerk-react';
@@ -46,7 +45,7 @@ const Profile = () => {
 
   return (
     <Box bg="gray.900" minH="100vh">
-      <Navbar />
+      
       <Flex direction="row" bg="gray.900" borderTop="1px" borderColor="gray.700">
         <Box
           display={{ base: 'none', md: 'block' }} // Hide on mobile
