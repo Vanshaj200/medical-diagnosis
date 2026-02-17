@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../media/Virtual GymVerse.png';
 import {
@@ -20,6 +20,19 @@ const Navbar = () => {
   const { user, isSignedIn } = useUser();
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleBooking = () => {
     if (isSignedIn) {
@@ -29,143 +42,211 @@ const Navbar = () => {
     }
   };
 
+  const navClasses = `sticky top-0 z-50 transition-all duration-300 ${scrolled
+    ? 'bg-slate-900/90 backdrop-blur-md shadow-lg py-2'
+    : 'bg-transparent py-4'
+    }`;
+
+  // Button styles for consistency
+  const navButtonStyle = {
+    variant: 'ghost',
+    color: 'white',
+    _hover: { bg: 'whiteAlpha.200', transform: 'translateY(-2px)' },
+    _active: { bg: 'whiteAlpha.300' },
+    transition: 'all 0.3s ease',
+    fontSize: '0.95rem',
+    fontWeight: '500',
+    letterSpacing: '0.02em',
+  };
+
+  const menuListStyle = {
+    bg: 'gray.800',
+    borderColor: 'gray.700',
+    boxShadow: 'xl',
+    p: 2,
+    rounded: 'xl',
+  };
+
+  const menuItemStyle = {
+    bg: 'transparent',
+    color: 'gray.100',
+    _hover: { bg: 'blue.600', color: 'white' },
+    rounded: 'md',
+    mb: 1,
+  };
+
   return (
-    <Flex justifyContent="space-between" alignItems="center" p="2" color="white">
-      {/* Logo */}
-      <Link to={'/'}>
-        <img src={logo} width="60px" className="rounded-full ml-1 mt-1" alt="Virtual GymVerse" />
-      </Link>
+    <Box as="nav" className={navClasses} width="100%">
+      <Flex
+        maxW="7xl"
+        mx="auto"
+        px={{ base: 4, md: 8 }}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {/* Logo */}
+        <Link to={'/'} className="flex items-center gap-3 group">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-300 group-hover:rotate-12">
+            <rect width="40" height="40" rx="12" fill="url(#logo_gradient)" />
+            <path d="M20 10C14.4772 10 10 14.4772 10 20C10 25.5228 14.4772 30 20 30C25.5228 30 30 25.5228 30 20" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M30 20C30 14.4772 25.5228 10 20 10" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.5" />
+            <defs>
+              <linearGradient id="logo_gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#3B82F6" />
+                <stop offset="1" stopColor="#8B5CF6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          {!isMobile && (
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 font-sans tracking-tight">
+              OnlySolution
+            </span>
+          )}
+        </Link>
 
-      {/* Conditional Rendering for Mobile */}
-      {isMobile ? (
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            icon={<HamburgerIcon />}
-            variant="outline"
-            color="white"
-            _hover={{ bg: 'gray.600' }}
-          />
-          <MenuList bg="gray.900" borderColor="gray.700">
-            {/* Menu Items */}
-            <MenuItem as={Link} bg="gray.900" color="white" to="/fitness" _hover={{ bg: 'gray.600' }}>
-              Virtual Gym
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/Tracker/dashboard" _hover={{ bg: 'gray.600' }}>
-              Fitness Tracker
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/Bmi" _hover={{ bg: 'gray.600' }}>
-              BMI Calculator
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/catch" _hover={{ bg: 'gray.600' }}>
-              Free Fall
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/Memory" _hover={{ bg: 'gray.600' }}>
-              Memory Games
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/Aibot" _hover={{ bg: 'gray.600' }}>
-              Chatbot
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/Contact" _hover={{ bg: 'gray.600' }}>
-              Contact Us
-            </MenuItem>
-            <MenuItem as={Link} bg="gray.900" color="white" to="/news" _hover={{ bg: 'gray.600' }}>
-              News
-            </MenuItem>
+        {/* Mobile Menu */}
+        {isMobile ? (
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              icon={<HamburgerIcon />}
+              variant="outline"
+              color="white"
+              borderColor="whiteAlpha.400"
+              _hover={{ bg: 'whiteAlpha.200', borderColor: 'white' }}
+              _active={{ bg: 'whiteAlpha.300' }}
+            />
+            <MenuList {...menuListStyle}>
+              {/* Mobile Menu Items */}
+              <MenuItem as={Link} to="/fitness" {...menuItemStyle}>
+                Virtual Gym
+              </MenuItem>
+              <MenuItem as={Link} to="/Tracker/dashboard" {...menuItemStyle}>
+                Fitness Tracker
+              </MenuItem>
+              <MenuItem as={Link} to="/Bmi" {...menuItemStyle}>
+                BMI Calculator
+              </MenuItem>
+              <MenuItem as={Link} to="/catch" {...menuItemStyle}>
+                Free Fall
+              </MenuItem>
+              <MenuItem as={Link} to="/Memory" {...menuItemStyle}>
+                Memory Games
+              </MenuItem>
+              <MenuItem as={Link} to="/Aibot" {...menuItemStyle}>
+                AI Chatbot
+              </MenuItem>
+              <MenuItem as={Link} to="/Contact" {...menuItemStyle}>
+                Contact Us
+              </MenuItem>
+              <MenuItem as={Link} to="/news" {...menuItemStyle}>
+                News
+              </MenuItem>
 
-            <Divider />
+              <Divider my={2} borderColor="gray.600" />
 
-            {/* User Authentication (Profile Icon inside Mobile Menu) */}
-            <Box p="2">
+              {/* User Auth Mobile */}
+              <Box p="2" display="flex" justifyContent="center">
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button size="sm" colorScheme="blue" width="full">Sign In</Button>
+                  </SignInButton>
+                </SignedOut>
+              </Box>
+            </MenuList>
+          </Menu>
+        ) : (
+          <Flex alignItems="center" gap="2">
+            {/* Desktop Navigation */}
+            <Button {...navButtonStyle} onClick={handleBooking}>
+              Book Appointment
+            </Button>
+
+            <Menu>
+              <MenuButton as={Button} {...navButtonStyle} rightIcon={<ChevronDownIcon />}>
+                Fitness
+              </MenuButton>
+              <MenuList {...menuListStyle}>
+                <MenuItem as={Link} to="/fitness" {...menuItemStyle}>
+                  Virtual Gym
+                </MenuItem>
+                <MenuItem as={Link} to="/Tracker/dashboard" {...menuItemStyle}>
+                  Fitness Tracker
+                </MenuItem>
+                <MenuItem as={Link} to="/Bmi" {...menuItemStyle}>
+                  BMI Calculator
+                </MenuItem>
+              </MenuList>
+            </Menu>
+
+            <Menu>
+              <MenuButton as={Button} {...navButtonStyle} rightIcon={<ChevronDownIcon />}>
+                Games
+              </MenuButton>
+              <MenuList {...menuListStyle}>
+                <MenuItem as={Link} to="/catch" {...menuItemStyle}>
+                  Free Fall
+                </MenuItem>
+                <MenuItem as={Link} to="/Memory" {...menuItemStyle}>
+                  Memory Games
+                </MenuItem>
+              </MenuList>
+            </Menu>
+
+            <Menu>
+              <MenuButton as={Button} {...navButtonStyle} rightIcon={<ChevronDownIcon />}>
+                AI Assistant
+              </MenuButton>
+              <MenuList {...menuListStyle}>
+                <MenuItem as={Link} to="/Aibot" {...menuItemStyle}>
+                  Chatbot
+                </MenuItem>
+              </MenuList>
+            </Menu>
+
+            <Button as={Link} to="/Contact" {...navButtonStyle}>
+              Contact
+            </Button>
+
+            <Menu>
+              <MenuButton as={Button} {...navButtonStyle} rightIcon={<ChevronDownIcon />}>
+                More
+              </MenuButton>
+              <MenuList {...menuListStyle}>
+                <MenuItem as={Link} to="/news" {...menuItemStyle}>
+                  News
+                </MenuItem>
+              </MenuList>
+            </Menu>
+
+            {/* User Auth Desktop */}
+            <Box ml={4}>
               <SignedIn>
                 <UserButton />
               </SignedIn>
               <SignedOut>
-                <SignInButton />
+                <SignInButton mode="modal">
+                  <Button
+                    size="sm"
+                    colorScheme="blue"
+                    variant="solid"
+                    px={6}
+                    rounded="full"
+                    boxShadow="0 4px 14px 0 rgba(0,118,255,0.39)"
+                    _hover={{ transform: 'translateY(-1px)', boxShadow: '0 6px 20px rgba(0,118,255,0.23)' }}
+                  >
+                    Sign In
+                  </Button>
+                </SignInButton>
               </SignedOut>
             </Box>
-          </MenuList>
-        </Menu>
-      ) : (
-        <Flex alignItems="center" gap="4">
-          {/* Desktop Navigation Links */}
-          <Button variant="ghost" color={'white'} _hover={{ bg: 'gray.600' }} onClick={handleBooking}>
-            Book Appointment
-          </Button>
-
-          <Menu>
-            <MenuButton as={Button} color={'white'} variant="ghost" _hover={{ bg: 'gray.600' }} rightIcon={<ChevronDownIcon />}>
-              Fitness
-            </MenuButton>
-            <MenuList bg="gray.900" borderColor="gray.700">
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/fitness" _hover={{ bg: 'gray.600' }}>
-                Virtual Gym
-              </MenuItem>
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/Tracker/dashboard" _hover={{ bg: 'gray.600' }}>
-                Fitness Tracker
-              </MenuItem>
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/Bmi" _hover={{ bg: 'gray.600' }}>
-                BMI Calculator
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Menu>
-            <MenuButton as={Button} color={'white'} variant="ghost" _hover={{ bg: 'gray.600' }} rightIcon={<ChevronDownIcon />}>
-              Games
-            </MenuButton>
-            <MenuList bg="gray.900" borderColor="gray.700">
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/catch" _hover={{ bg: 'gray.600' }}>
-                Free Fall
-              </MenuItem>
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/Memory" _hover={{ bg: 'gray.600' }}>
-                Memory Games
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Menu>
-            <MenuButton as={Button} color={'white'} variant="ghost" _hover={{ bg: 'gray.600' }} rightIcon={<ChevronDownIcon />}>
-              AI Assistant
-            </MenuButton>
-            <MenuList bg="gray.900" borderColor="gray.700">
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/Aibot" _hover={{ bg: 'gray.600' }}>
-                Chatbot
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Button color={'white'} variant="ghost" _hover={{ bg: 'gray.600' }}>
-            <a href="/Contact">Contact Us</a>
-          </Button>
-
-          <Menu>
-            <MenuButton as={Button} color={'white'} variant="ghost" _hover={{ bg: 'gray.600' }} rightIcon={<ChevronDownIcon />}>
-              News & More
-            </MenuButton>
-            <MenuList bg="gray.900" borderColor="gray.700">
-              <MenuItem as={Link} bg="gray.900" color={'white'} to="/news" _hover={{ bg: 'gray.600' }}>
-                News
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
-          {/* User Authentication (Profile Icon for Desktop View) */}
-          <Box
-            className={`${
-              !user ? 'border border-white text-gray-200 hover:bg-gray-100 transition-all duration-300 hover:text-black px-4' : ''
-            } py-1 rounded-full mx-4`}
-          >
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-          </Box>
-        </Flex>
-      )}
-    </Flex>
+          </Flex>
+        )}
+      </Flex>
+    </Box>
   );
 };
 

@@ -1,33 +1,57 @@
-import React from 'react'
-import Contact from './Contact';
+import React, { useEffect } from 'react'
 import Lottie from "lottie-react";
 import gif from "../media/Animation - 1720638512048.json"
 import giff from "../media/Animation - 1719504456561.json"
-import { GoHeartFill } from "react-icons/go";
 import News from './News';
 import '../App.css';
 import Fit from "./Fit"
 import Card from '../components/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import Games from './Games';
-import { SimpleGrid, Box, Heading, Text, Button, useBreakpointValue, Flex, Spinner as Loader } from '@chakra-ui/react';
+import { SimpleGrid, Box, Heading, Text, Button, useBreakpointValue, Flex, Spinner as Loader, Container, Stack } from '@chakra-ui/react';
 import { useUser } from '@clerk/clerk-react';
 import { useAuthStore } from '../context/store';
 import AppointmentHero from '../components/AppointmentHero';
 import Navbar from '../components/Navbar';
 import yog from '../photos/depositphotos_85221854-stock-photo-group-of-happy-friends-exercising.jpg'
 import bot from '../photos/1714394648414.jpg'
-import qtt from '../photos/29363-Fred-DeVito-Quote-If-it-doesn-t-challenge-you-it-doesn-t-change.jpg'
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'framer-motion';
+
+const MotionBox = motion(Box);
+const MotionFlex = motion(Flex);
+
+const Section = ({ children, delay = 0 }) => {
+  const controls = useAnimation();
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay } }
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 export default function Home() {
   const { setUser } = useAuthStore();
   const { user, isLoaded, isSignedIn } = useUser();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const navigate = useNavigate()
-
-
-
-
+  const navigate = useNavigate();
 
   const handleBooking = () => {
     if (isSignedIn) {
@@ -37,186 +61,197 @@ export default function Home() {
     }
   };
 
-
-
-  if (isLoaded) {
-    // setUser(user);
-    if (user) {
-      setUser(user, user.publicMetadata?.role)
-      if (user?.publicMetadata.role === "admin") {
-        navigate('/admin-dashboard/inbox')
+  useEffect(() => {
+    if (isLoaded) {
+      if (user) {
+        setUser(user, user.publicMetadata?.role)
+        if (user?.publicMetadata.role === "admin") {
+          navigate('/admin-dashboard/inbox')
+        }
+      } else {
+        localStorage.removeItem('userState');
       }
     }
+  }, [isLoaded, user, navigate, setUser]);
 
-    if (!user) {
-      console.log("not auth")
-      localStorage.removeItem('userState');
-    }
+
+  if (!isLoaded) {
+    return (
+      <Flex
+        align="center"
+        justify="center"
+        h="100vh"
+        bg="gray.900"
+      >
+        <Loader size="xl" color='blue.500' thickness='4px' />
+      </Flex>
+    );
   }
 
-
-
   return (
-    <>
-      {!isLoaded ? <Flex
-        align="center"  // Center items vertically
-        justify="center" // Center items horizontally
-        h="100vh"
-        background={'gray.900'}       // Full viewport height for vertical centering
-      >
-        <Loader color='white' />
-      </Flex> :
-        (
-          <div className="App overflow-hidden ">
+    <div className="App overflow-x-hidden bg-gray-900 text-white font-sans">
+      <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-gray-900 min-h-screen">
+        <Navbar />
 
+        <AppointmentHero />
 
-            <section className=" bg-gradient-to-br from-gray-700 via-gray-900 to-gray-950">
-
-
-              <Navbar />
-
-              <AppointmentHero />
-
-
-
-              <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" id='fitnessTracker'>
-
-                <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-
+        {/* Fitness Tracker Section */}
+        <Section>
+          <Container maxW="7xl" py={{ base: 12, md: 24 }} px={{ base: 6, md: 10 }} id='fitnessTracker'>
+            <Flex direction={{ base: 'column', md: 'row' }} align="center" justify="space-between" gap={12}>
+              <Box flex={1}>
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-teal-400 to-blue-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                   <img
-                    src={yog} className='rounded-e-full'
+                    src={yog}
+                    className='relative rounded-3xl shadow-2xl w-full object-cover transform transition-transform duration-500 hover:scale-[1.01]'
+                    alt="Fitness Tracker"
                   />
                 </div>
-                <div className="mr-auto place-self-center lg:col-span-7 ml-6">
-                  <h1 className="max-w-2xl text-white  text-xl font-extrabold text-left  md:text-5xl xl:text-5xl mb-8 ">Elevate Your Fitness Experience with Advanced Tracking</h1>
-                  <p className="max-w-2xl mb-6 font-light text-blue-200 lg:mb-8 text-left md:text-lg lg:text-xl italic special-heading  ">"Unlock Your Potential and Achieve Optimal Fitness Levels Through Cutting-Edge Data-Driven Tracking"
-
-
-                  </p>
-                  <button onClick={handleBooking} className="inline-flex items-center mb-4 lg:mb-0 justify-center px-5 py-3 mr-3 text-base font-medium text-center border border-white text-white rounded-lg bg-primary-700 hover:bg-primary-800 " >
-                    Fitness Tracker
-                    <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                  </button>
-                  <Link to="/Bmi" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white border  rounded-lg  focus:ring-4  border-gray-700 hover:bg-gray-700 focus:ring-gray-800">
-                    BMI Calculator
-                  </Link>
-                </div>
-
-              </div>
-            </section>
-
-
-
-
-            {/* <div className="text-center  hidden lg:block"> 
-        <Spinner />
-      </div> */}
-
-            <div id='virtualGym'>
-              <Fit />
-            </div>
-
-            <div className=' ' id='games'>
-              <Games />
-            </div>
-            <SimpleGrid
-
-              columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
-              spacing={8}
-              p={8}
-              bg="gray.50"
-              borderRadius="lg"
-              boxShadow="md"
-              bgColor="blue.50"
-            >
-              <a href="#games">
-                <Card
-                  title="Games"
-                  text="Explore fun and interactive games to stay active and engaged."
-                />
-              </a>
-              <a href="#virtualGym">
-                <Card
-                  title="Virtual Gym"
-                  text="Access virtual gym sessions for personalized workouts."
-                />
-              </a>
-              <a href="#fitnessTracker">
-                <Card
-                  title="Fitness Tracker"
-                  text="Track your fitness progress and set goals with our integrated tracker."
-                />
-              </a>
-              <a href="#chatBot">
-                <Card
-                  title="AI Bot"
-                  text="Interact with our AI bot for personalized health and fitness advice."
-                />
-              </a>
-            </SimpleGrid>
-
-
-            <Flex
-              direction={isMobile ? 'column' : 'row'}
-              align="center"
-              justify="center"
-              gap={8}
-              p={8}
-              bg="gray.50"
-              borderRadius="md"
-              boxShadow="md"
-              minH="400px"
-              id='chatBot'
-              bgColor="blue.50"
-            >
-              <Box textAlign={isMobile ? 'center' : 'left'}>
-                <Heading as="h2" size="xl" color="gray.800" mb={4}>
-                  Access AI-Driven Medical Consultations
+              </Box>
+              <Stack flex={1} spacing={6} textAlign={{ base: 'center', md: 'left' }}>
+                <Heading as="h2" size="2xl" lineHeight="tight">
+                  Elevate Your Fitness <br />
+                  <span className="text-blue-400">With Advanced Tracking</span>
                 </Heading>
-                <Text fontSize="lg" color="gray.600" mb={6}>
-                  Get expert medical advice anytime, anywhere. Fast, reliable, and secure medical consultations at your fingertips.
+                <Text fontSize="lg" color="gray.300" fontStyle="italic">
+                  "Unlock your potential and achieve optimal fitness levels through cutting-edge data-driven tracking."
                 </Text>
-                <Link to="/Aibot">
+                <Flex gap={4} justify={{ base: 'center', md: 'flex-start' }} wrap="wrap">
                   <Button
-                    colorScheme="blue"
                     size="lg"
-                    variant="solid"
-                    borderRadius="full"
-                    px={6}
-                    py={3}
-                    fontWeight="bold"
-                    _hover={{ bg: 'blue.600' }}
+                    colorScheme="blue"
+                    onClick={handleBooking}
+                    px={8}
+                    rounded="full"
+                    boxShadow="lg"
+                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'xl' }}
                   >
-                    Chat with the AI Bot Now
+                    Go to Tracker
                   </Button>
-                </Link>
-              </Box>
-              <Box w="full" maxW="md" mx="auto">
-                <img src={bot} className='rounded-xl' />
-              </Box>
+                  <Link to="/Bmi">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      colorScheme="teal"
+                      color="teal.200"
+                      border="2px"
+                      px={8}
+                      rounded="full"
+                      _hover={{ bg: 'whiteAlpha.100', transform: 'translateY(-2px)' }}
+                    >
+                      BMI Calculator
+                    </Button>
+                  </Link>
+                </Flex>
+              </Stack>
             </Flex>
+          </Container>
+        </Section>
 
-            <div>
-              <News />
-            </div>
+        {/* Feature Cards Grid */}
+        <Section>
+          <Container maxW="7xl" py={16} px={6}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 4 }}
+              spacing={8}
+            >
+              {[
+                { title: "Games", text: "Explore fun and interactive games to stay active and engaged.", link: "#games", color: "purple.500" },
+                { title: "Virtual Gym", text: "Access virtual gym sessions for personalized workouts.", link: "#virtualGym", color: "blue.500" },
+                { title: "Fitness Tracker", text: "Track your fitness progress and set goals.", link: "#fitnessTracker", color: "teal.500" },
+                { title: "AI Bot", text: "Interact with our AI bot for health advice.", link: "#chatBot", color: "pink.500" }
+              ].map((card, index) => (
+                <a href={card.link} key={index} className="block group">
+                  <Box
+                    bg="gray.800"
+                    p={8}
+                    rounded="2xl"
+                    border="1px"
+                    borderColor="gray.700"
+                    transition="all 0.3s"
+                    _hover={{ borderColor: card.color, transform: 'translateY(-5px)', boxShadow: 'xl' }}
+                    height="100%"
+                  >
+                    <Heading size="md" mb={4} color={card.color}>{card.title}</Heading>
+                    <Text color="gray.400">{card.text}</Text>
+                  </Box>
+                </a>
+              ))}
+            </SimpleGrid>
+          </Container>
+        </Section>
 
+        <div id='virtualGym'>
+          <Fit />
+        </div>
 
-            <div>
-              <footer className="  py-6">
-                <div className="container mx-auto text-center">
-                  <p className="mb-4 text-black">© 2024 OnlySolution. All rights reserved.</p>
-                  <div className="flex justify-center space-x-4">
-                    <a href="#" className="hover:text-gray-400 text-black">Privacy Policy</a>
-                    <a href="#" className="hover:text-gray-400 text-black">Terms of Service</a>
-                    <a href="/Contact" className="hover:text-gray-400 text-black">Contact Us</a>
-                  </div>
-                </div>
-              </footer>
-            </div>
+        <div id='games'>
+          <Games />
+        </div>
 
-          </div>
-        )
-      }
-    </>
+        {/* AI Bot Section */}
+        <Section>
+          <Container maxW="7xl" py={24} px={6} id='chatBot'>
+            <Box
+              bg="gray.800"
+              rounded="3xl"
+              p={{ base: 8, md: 16 }}
+              position="relative"
+              overflow="hidden"
+              boxShadow="2xl"
+              border="1px"
+              borderColor="gray.700"
+            >
+              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+              <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+
+              <Flex direction={{ base: 'column', md: 'row' }} align="center" gap={12} position="relative" zIndex={1}>
+                <Box flex={1} textAlign={{ base: 'center', md: 'left' }}>
+                  <Heading as="h2" size="xl" mb={6} bgClip="text" bgGradient="linear(to-r, blue.400, purple.500)">
+                    AI-Driven Medical Consultations
+                  </Heading>
+                  <Text fontSize="lg" color="gray.300" mb={8} maxW="lg">
+                    Get expert medical advice anytime, anywhere. Experience fast, reliable, and secure medical consultations powered by advanced AI.
+                  </Text>
+                  <Link to="/Aibot">
+                    <Button
+                      size="lg"
+                      colorScheme="purple"
+                      bgGradient="linear(to-r, blue.500, purple.600)"
+                      _hover={{ bgGradient: "linear(to-r, blue.600, purple.700)", transform: 'scale(1.05)' }}
+                      rounded="full"
+                      px={8}
+                      boxShadow="lg"
+                    >
+                      Chat with AI Bot
+                    </Button>
+                  </Link>
+                </Box>
+                <Box flex={1} display="flex" justifyContent="center">
+                  <img src={bot} className='rounded-2xl shadow-2xl max-h-[400px] w-auto object-cover transform hover:rotate-2 transition-all duration-500' alt="AI Bot" />
+                </Box>
+              </Flex>
+            </Box>
+          </Container>
+        </Section>
+
+        <Container maxW="7xl" px={4} pb={10}>
+          <News />
+        </Container>
+
+        {/* Footer */}
+        <Box as="footer" bg="gray.950" py={12} borderTop="1px" borderColor="gray.800">
+          <Container maxW="7xl" textAlign="center">
+            <Text color="gray.500" mb={4}>&copy; OnlySolution. All rights reserved.</Text>
+            <Flex justify="center" gap={6}>
+              <Link to="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
+              <Link to="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
+              <Link to="/Contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link>
+            </Flex>
+          </Container>
+        </Box>
+      </div>
+    </div>
   )
 }

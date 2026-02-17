@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Basket from './Basket';
 import Dumbbell from './Dumbbell';
 
@@ -124,8 +125,13 @@ const Catch = () => {
         setDumbbellInterval(1000);
     };
 
+    // ... inside Catch component ...
+
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-orange-100">
+        <div className="flex flex-col items-center justify-center h-screen bg-orange-100 relative">
+            <Link to="/" className="absolute top-4 left-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 font-bold z-50">
+                Back to Home
+            </Link>
             <h1 className="text-4xl mt-3 mb-4 text-slate-600 font-serif font-extrabold">CATCH THE DUMBBELL</h1>
             {gameOver ? (
                 <div className="text-center">

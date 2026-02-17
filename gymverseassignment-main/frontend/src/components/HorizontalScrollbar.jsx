@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-import { Box, Typography } from '@mui/material';
+import { Box, Image, Text } from '@chakra-ui/react';
 
 import ExerciseCard from './ExerciseCard'
 import BodyPart from './BodyPart';
@@ -11,9 +11,9 @@ const LeftArrow = () => {
   const { scrollPrev } = useContext(VisibilityContext);
 
   return (
-    <Typography onClick={() => scrollPrev()} className="right-arrow">
-      <img src={LeftArrowIcon} alt="right-arrow"  width="70px" />
-    </Typography>
+    <Box onClick={() => scrollPrev()} className="right-arrow" cursor="pointer" p={2}>
+      <Image src={LeftArrowIcon} alt="left-arrow" width="50px" />
+    </Box>
   );
 };
 
@@ -21,9 +21,9 @@ const RightArrow = () => {
   const { scrollNext } = useContext(VisibilityContext);
 
   return (
-    <Typography onClick={() => scrollNext()} className="left-arrow">
-      <img src={RightArrowIcon} alt="right-arrow" width="70px" />
-    </Typography>
+    <Box onClick={() => scrollNext()} className="left-arrow" cursor="pointer" p={2}>
+      <Image src={RightArrowIcon} alt="right-arrow" width="50px" />
+    </Box>
   );
 };
 
@@ -36,7 +36,7 @@ const HorizontalScrollbar = ({ data, bodyParts, setBodyPart, bodyPart }) => (
         title={item.id || item}
         m="0 40px"
       >
-        {bodyParts ? <BodyPart item={item} setBodyPart={setBodyPart} bodyPart={bodyPart} /> : <ExerciseCard exercise={item} /> }
+        {bodyParts ? <BodyPart item={item} setBodyPart={setBodyPart} bodyPart={bodyPart} /> : <ExerciseCard exercise={item} />}
       </Box>
     ))}
   </ScrollMenu>

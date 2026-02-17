@@ -1,11 +1,13 @@
 import React from 'react';
-import { Stack } from '@mui/material';
-import { InfinitySpin } from 'react-loader-spinner';
+import { Stack, Text, Spinner, Center } from '@chakra-ui/react';
 
 const Loader = () => (
-  <Stack direction="row" justifyContent="center" alignItems="center" width="100%">
-   <div className='mt-[10rem]'>NO DATA FOUND</div>
-  </Stack>
+  <Center width="100%" py={10}>
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={4}>
+      <Spinner size="xl" color="blue.500" thickness='4px' />
+      <Text color="gray.400" fontSize="lg">Loading...</Text>
+    </Stack>
+  </Center>
 );
 
 export default Loader;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import { FaDumbbell, FaRunning, FaBicycle, FaSwimmer, FaWeightHanging, FaBiking } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 
 const cardIcons = [
@@ -68,8 +69,11 @@ function App() {
     }, []);
 
     return (
-        <div className="App flex flex-col justify-center items-center h-screen bg-gray-100">
-           <h1 className=" text-white bg-slate-500 outline-slate-600 p-3 outline text-4xl font-serif mb-3 font-extrabold">Fitness Memory Game</h1>
+        <div className="App flex flex-col justify-center items-center h-screen bg-gray-100 relative">
+            <Link to="/" className="absolute top-4 left-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-bold z-50">
+                Back to Home
+            </Link>
+            <h1 className=" text-white bg-slate-500 outline-slate-600 p-3 outline text-4xl font-serif mb-3 font-extrabold">Fitness Memory Game</h1>
 
             <button
                 onClick={shuffleCards}

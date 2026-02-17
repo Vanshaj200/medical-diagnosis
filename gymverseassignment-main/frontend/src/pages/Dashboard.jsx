@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Box, SimpleGrid, Stack, Text, Icon, Flex } from '@chakra-ui/react';
 import { Pie } from 'react-chartjs-2';
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { userProfile, getWorkoutChart, fetchDashboardData } from '../utils/fetchData';
 import DistanceBarGraph from '../components/BarChart';
-
+import { FaFire, FaRunning, FaWalking, FaClock, FaTrophy, FaTimesCircle } from 'react-icons/fa';
 
 
 import {
@@ -24,6 +24,39 @@ ChartJS.register(
   Legend
 );
 
+const StatCard = ({ title, value, unit, icon, color }) => (
+  <Box
+    p={6}
+    bg="gray.800"
+    borderRadius="xl"
+    boxShadow="lg"
+    border="1px"
+    borderColor="gray.700"
+    transition="transform 0.2s"
+    _hover={{ transform: 'translateY(-2px)', borderColor: color }}
+    position="relative"
+    overflow="hidden"
+  >
+    <Box position="absolute" top="-10px" right="-10px" opacity="0.1">
+      <Icon as={icon} w={24} h={24} color={color} />
+    </Box>
+    <Flex align="center" mb={2}>
+      <Icon as={icon} w={6} h={6} color={color} mr={3} />
+      <Text fontWeight="medium" color="gray.400" fontSize="sm" textTransform="uppercase" letterSpacing="wide">
+        {title}
+      </Text>
+    </Flex>
+    <Flex align="baseline">
+      <Text fontSize="3xl" fontWeight="bold" color="white" mr={2}>
+        {value}
+      </Text>
+      <Text fontSize="md" color="gray.500" fontWeight="medium">
+        {unit}
+      </Text>
+    </Flex>
+  </Box>
+);
+
 const Dashboard = () => {
   const { user } = useUser();
   const { getToken } = useAuth()
@@ -39,11 +72,11 @@ const Dashboard = () => {
         label: 'Workout Types',
         data: [],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(54, 162, 235, 0.5)',
-          'rgba(255, 206, 86, 0.5)',
-          'rgba(75, 192, 192, 0.5)',
-          'rgba(153, 102, 255, 0.5)',
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)',
         ],
         borderColor: [
           'rgb(255, 99, 132)',
@@ -52,10 +85,19 @@ const Dashboard = () => {
           'rgb(75, 192, 192)',
           'rgb(153, 102, 255)',
         ],
-        borderWidth: 1,
+        borderWidth: 2,
       },
     ],
   });
+  const [dashboardData, setDashboardData] = useState({
+    caloriesBurned: 0,
+    distanceCovered: 0,
+    stepsTaken: 0,
+    timeSpent: '0h 0m',
+    achievedGoals: 0,
+    notAchievedGoals: 0,
+  });
+
   const fetchDashboard = useCallback(async () => {
     try {
       const response = await fetchDashboardData(user?.id)
@@ -69,7 +111,7 @@ const Dashboard = () => {
         caloriesBurned: data.totalCaloriesBurned || 0,
         distanceCovered: data.totalDistance || 0,
         stepsTaken: data.totalSteps || 0,
-        timeSpent: `${Math.floor(data.totalTimeSpent / 60)} hours ${data.totalTimeSpent % 60} minutes`, // Converting minutes to hours and minutes
+        timeSpent: `${Math.floor(data.totalTimeSpent / 60)}h ${data.totalTimeSpent % 60}m`,
         achievedGoals: data.achievedGoals || 0,
         notAchievedGoals: data.notAchievedGoals || 0,
       });
@@ -95,11 +137,11 @@ const Dashboard = () => {
               label: 'Workout Types',
               data: dataValues,
               backgroundColor: [
-                'rgba(255, 99, 132, 0.5)',
-                'rgba(54, 162, 235, 0.5)',
-                'rgba(255, 206, 86, 0.5)',
-                'rgba(75, 192, 192, 0.5)',
-                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
               ],
               borderColor: [
                 'rgb(255, 99, 132)',
@@ -108,7 +150,7 @@ const Dashboard = () => {
                 'rgb(75, 192, 192)',
                 'rgb(153, 102, 255)',
               ],
-              borderWidth: 1,
+              borderWidth: 2,
             },
           ],
         });
@@ -125,71 +167,54 @@ const Dashboard = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'bottom',
+        labels: { color: 'white' }
       },
       title: {
         display: true,
-        text: 'Workout Types for This Week',
+        text: 'Workout Distribution',
+        color: 'white',
+        font: { size: 16 }
       },
     },
+    scales: {
+      y: { ticks: { color: 'gray' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+      x: { ticks: { color: 'gray' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+    }
   };
 
-  // State for storing the values of each box
-  const [dashboardData, setDashboardData] = useState({
-    caloriesBurned: 0,
-    distanceCovered: 0,
-    stepsTaken: 0,
-    timeSpent: '0 hours',
-    achievedGoals: 0,
-    notAchievedGoals: 0,
-  });
-
-
-
-
   return (
-    <Stack spacing={8} p={8}>
-      {/* Upper Section with 6 boxes */}
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
-        {/* First Row */}
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Total Calories Burned</Text>
-          <Text mt={2} color="white">{dashboardData.caloriesBurned} kcal</Text>
-        </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Total Distance Covered</Text>
-          <Text mt={2} color="white">{dashboardData.distanceCovered} km</Text>
-        </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Total Steps Taken</Text>
-          <Text mt={2} color="white">{dashboardData.stepsTaken} steps</Text>
-        </Box>
+    <Stack spacing={8} p={4}>
+      <Box mb={4}>
+        <Text fontSize="2xl" fontWeight="bold" color="white" mb={2}>Dashboard Overview</Text>
+        <Text color="gray.400">Track your fitness journey and detailed statistics.</Text>
+      </Box>
 
-        {/* Second Row */}
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Total Time Spent</Text>
-          <Text mt={2} color="white">{dashboardData.timeSpent}</Text>
-        </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Achieved Goals</Text>
-          <Text mt={2} color="white">{dashboardData.achievedGoals}/{dashboardData.achievedGoals + dashboardData.notAchievedGoals}</Text>
-        </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Text fontWeight="bold" color="gray.300" fontSize={'large'}>Not Achieved Goals</Text>
-          <Text mt={2} color="white">{dashboardData.notAchievedGoals}/{dashboardData.achievedGoals + dashboardData.notAchievedGoals}</Text>
-        </Box>
+      {/* Upper Section with 6 boxes */}
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+        <StatCard title="Calories Burned" value={dashboardData.caloriesBurned} unit="kcal" icon={FaFire} color="orange.400" />
+        <StatCard title="Distance" value={dashboardData.distanceCovered} unit="km" icon={FaRunning} color="blue.400" />
+        <StatCard title="Steps" value={dashboardData.stepsTaken} unit="steps" icon={FaWalking} color="green.400" />
+        <StatCard title="Active Time" value={dashboardData.timeSpent} unit="" icon={FaClock} color="purple.400" />
+        <StatCard title="Goals Met" value={`${dashboardData.achievedGoals}/${dashboardData.achievedGoals + dashboardData.notAchievedGoals}`} unit="" icon={FaTrophy} color="yellow.400" />
+        <StatCard title="Pending Goals" value={dashboardData.notAchievedGoals} unit="" icon={FaTimesCircle} color="red.400" />
       </SimpleGrid>
 
       {/* Lower Section with Charts */}
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <Pie data={chartData} options={options} />
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
+        <Box p={6} bg="gray.800" borderRadius="xl" boxShadow="lg" border="1px" borderColor="gray.700">
+          <Text fontSize="lg" fontWeight="semibold" color="white" mb={4}>Weekly Activity</Text>
+          <CaloriesLineChart />
         </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
+        <Box p={6} bg="gray.800" borderRadius="xl" boxShadow="lg" border="1px" borderColor="gray.700">
+          <Text fontSize="lg" fontWeight="semibold" color="white" mb={4}>Distance Covered</Text>
           <DistanceBarGraph />
         </Box>
-        <Box p={5} shadow="2xl" borderWidth="1px" borderColor={'gray.900'} borderRadius="md" bg="gray.800">
-          <CaloriesLineChart />
+        <Box p={6} bg="gray.800" borderRadius="xl" boxShadow="lg" border="1px" borderColor="gray.700" gridColumn={{ lg: "span 2" }} maxW={{ lg: "50%" }} mx="auto" w="full">
+          <Text fontSize="lg" fontWeight="semibold" color="white" mb={4} textAlign="center">Workout Types</Text>
+          <Box h="300px" display="flex" justifyContent="center">
+            <Pie data={chartData} options={{ ...options, maintainAspectRatio: false }} />
+          </Box>
         </Box>
       </SimpleGrid>
     </Stack>

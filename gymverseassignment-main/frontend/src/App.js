@@ -38,13 +38,13 @@ function App() {
         <Route path="/Contact" element={<ChakraProvider>
           <Contact />
         </ChakraProvider>} />
-        <Route path="/Fitness" element={<Fitness />} />
-       
+        <Route path="/Fitness" element={<ChakraProvider><Fitness /></ChakraProvider>} />
+
         <Route path="/Bmi" element={<ChakraProvider>
           <Bmi />
         </ChakraProvider>} />
         <Route path="/Fitness/exercise/:id" element={
-          <ExerciseDetail />
+          <ChakraProvider><ExerciseDetail /></ChakraProvider>
         } />
         <Route path="/Aibot" element={<ChakraProvider>
           <Aibot />

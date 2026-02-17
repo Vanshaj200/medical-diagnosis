@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Pagination from '@mui/material/Pagination';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Heading, SimpleGrid, Button, HStack, Text } from '@chakra-ui/react';
 import ExerciseCard from './ExerciseCard';
 import { exerciseOptions, fetchData } from '../utils/fetchData';
-import Loader from "./Loader"
-const Exercises = ({ exercises,setExercises,bodyPart }) => {
+import Loader from "./Loader";
+
+const Exercises = ({ exercises, setExercises, bodyPart }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [exercisesPerPage] = useState(6);
+  const [exercisesPerPage] = useState(9); // Increased to 9 for better grid layout
 
   useEffect(() => {
     const fetchExercisesData = async () => {
@@ -29,38 +29,65 @@ const Exercises = ({ exercises,setExercises,bodyPart }) => {
   const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
   const currentExercises = exercises.slice(indexOfFirstExercise, indexOfLastExercise);
 
-  const paginate = (event, value) => {
-    setCurrentPage(value);
-
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
     window.scrollTo({ top: 1800, behavior: 'smooth' });
   };
+
+  const totalPages = Math.ceil(exercises.length / exercisesPerPage);
 
   if (!currentExercises.length) return <Loader />;
 
   return (
-    <Box id="exercises" sx={{ mt: { lg: '109px' } }} mt="50px" p="20px">
-      <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { lg: '44px', xs: '30px' } }} mb="46px">
+    <Box id="exercises" mt="50px" p="20px">
+      <Heading
+        as="h3"
+        mb="46px"
+        color="white"
+        fontWeight="bold"
+        textAlign="center"
+        fontSize={{ base: '30px', lg: '44px' }}
+      >
         Showing Results
-      </Typography>
-      <Stack direction="row" sx={{ gap: { lg: '107px', xs: '50px' } }} flexWrap="wrap" justifyContent="center">
-        {exercises.map((exercise, idx) => (
+      </Heading>
+
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10} justifyItems="center">
+        {currentExercises.map((exercise, idx) => (
           <ExerciseCard key={idx} exercise={exercise} />
         ))}
-      </Stack>
-      <Stack sx={{ mt: { lg: '114px', xs: '70px' } }} alignItems="center">
-        {exercises.length > 9 && (
-          <Pagination
-            color="standard"
-            shape="rounded"
-            defaultPage={1}
-            count={Math.ceil(exercises.length / exercisesPerPage)}
-            page={currentPage}
-            onChange={paginate}
-            size="large"
-          />
+      </SimpleGrid>
+
+      <Stack mt="100px" alignItems="center">
+        {exercises.length > exercisesPerPage && (
+          <HStack spacing={4}>
+            <Button
+              onClick={() => paginate(currentPage - 1)}
+              isDisabled={currentPage === 1}
+              colorScheme="blue"
+              variant="outline"
+              _hover={{ bg: "whiteAlpha.200" }}
+              color="white"
+            >
+              Previous
+            </Button>
+            <Text color="white" fontWeight="bold">
+              Page {currentPage} of {totalPages}
+            </Text>
+            <Button
+              onClick={() => paginate(currentPage + 1)}
+              isDisabled={currentPage === totalPages}
+              colorScheme="blue"
+              variant="outline"
+              _hover={{ bg: "whiteAlpha.200" }}
+              color="white"
+            >
+              Next
+            </Button>
+          </HStack>
         )}
       </Stack>
     </Box>
   );
 };
+
 export default Exercises;

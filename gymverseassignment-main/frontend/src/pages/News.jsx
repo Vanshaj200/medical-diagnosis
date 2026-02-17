@@ -12,6 +12,7 @@ import logo5 from "../media/Screenshot 2024-06-20 131823.png";
 import logo6 from "../media/supp.jfif";
 import logo7 from "../media/park.jfif";
 
+
 export default function News() {
   const settings = {
     dots: true,
@@ -24,7 +25,7 @@ export default function News() {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
         }
       },
       {
@@ -70,8 +71,6 @@ export default function News() {
       source: "Fitness Insights",
       link: "https://fitnessinsights.com"
     },
-  
-  
     {
       image: logo4,
       title: "Benefits of Strength Training for Aging Adults",
@@ -80,7 +79,6 @@ export default function News() {
       source: "Fitness Age",
       link: "https://fitnessage.com"
     },
-    
     {
       image: logo7,
       title: "Outdoor Fitness Trends for Summer 2024",
@@ -100,50 +98,72 @@ export default function News() {
   ];
 
   return (
-    <Box bg="blue.50" py={10} px={{ base: 4, md: 8 }}>
+    <Box py={10} px={{ base: 4, md: 8 }} className="news-slider-container">
+      <Heading as="h2" size="xl" textAlign="center" mb={10} color="white">
+        Latest <span className="text-blue-400">Health & Fitness</span> News
+      </Heading>
+      <style>
+        {`
+          .slick-dots li button:before {
+            color: white;
+          }
+          .slick-dots li.slick-active button:before {
+            color: #60a5fa;
+          }
+        `}
+      </style>
       <Box maxW="container.xl" mx="auto">
         <Slider {...settings}>
           {newsData.map((element, index) => (
-            <Box
-              key={index}
-              bg="white"
-              borderRadius="xl"
-              boxShadow="lg"
-              minHeight={'472px'}
-              overflow="hidden"
-              transition="all 0.3s ease"
-              _hover={{ boxShadow: "2xl", transform: "scale(1.02)" }}
-              p={4}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              h="100%"
-            >
-              <Image
-                src={element.image}
-                alt="News"
-                borderTopRadius="xl"
-                boxSize="100%"
-                objectFit="cover"
-                height="200px"
-                mb={4}
-              />
-              <VStack align="start" spacing={3} p={4} flex="1" overflow="hidden">
-                <Heading as="h3" size="md" color="blue.600" noOfLines={2}>
-                  {element.title}
-                </Heading>
-                <Text color="gray.600" noOfLines={3} overflow="hidden" textOverflow="ellipsis" >
-                  {element.description}
-                </Text>
-                <Flex justify="space-between" align="unset" width="full">
-                  <Text color="gray.500" fontSize="xs">
-                    {element.date} | {element.source}
+            <Box key={index} px={3} py={5}>
+              <Box
+                bg="gray.800"
+                borderRadius="xl"
+                boxShadow="lg"
+                minHeight={'472px'}
+                overflow="hidden"
+                transition="all 0.3s ease"
+                _hover={{ transform: "translateY(-5px)", boxShadow: "2xl", borderColor: "blue.500" }}
+                border="1px"
+                borderColor="gray.700"
+                display="flex"
+                flexDirection="column"
+                h="100%"
+              >
+                <Image
+                  src={element.image}
+                  alt="News"
+                  borderTopRadius="xl"
+                  w="100%"
+                  h="200px"
+                  objectFit="cover"
+                />
+                <VStack align="start" spacing={4} p={6} flex="1">
+                  <Heading as="h3" size="md" color="blue.300" noOfLines={2} lineHeight="short">
+                    {element.title}
+                  </Heading>
+                  <Text color="gray.400" noOfLines={3} fontSize="sm">
+                    {element.description}
                   </Text>
-                  <Link href={element.link} isExternal color="blue.500" fontWeight="bold" display="flex" alignItems="center" fontSize={'sm'}>
-                    Read more <ArrowForwardIcon ml={1} />
-                  </Link>
-                </Flex>
-              </VStack>
+                  <Flex justify="space-between" align="center" width="full" mt="auto" pt={4}>
+                    <Text color="gray.500" fontSize="xs" fontWeight="medium">
+                      {element.source}
+                    </Text>
+                    <Link
+                      href={element.link}
+                      isExternal
+                      color="blue.400"
+                      fontWeight="bold"
+                      fontSize="sm"
+                      _hover={{ color: "blue.300", textDecoration: "none" }}
+                      display="flex"
+                      alignItems="center"
+                    >
+                      Read <ArrowForwardIcon ml={1} />
+                    </Link>
+                  </Flex>
+                </VStack>
+              </Box>
             </Box>
           ))}
         </Slider>
