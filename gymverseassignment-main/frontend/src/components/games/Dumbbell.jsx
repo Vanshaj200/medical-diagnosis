@@ -4,7 +4,7 @@ import { LiaDumbbellSolid } from "react-icons/lia";
 const Dumbbell = ({ x, y }) => {
     return (
         <div
-            className="absolute text-4xl"
+            className="absolute text-4xl text-white drop-shadow-md"
             style={{
                 left: `${x}px`,
                 top: `${y}px`,

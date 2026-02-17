@@ -12,14 +12,14 @@ function Aibot() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen  bg-gradient-to-r from-blue-50 to-blue-400">
+    <div className="flex flex-col items-center justify-center h-screen">
       <header className="text-center mb-4">
-        <h1 className="text-3xl font-bold text-gray-800">Welcome to our Chatbot</h1>
-        <p className="text-gray-600 text-xl">Start your conversation with a HI!</p>
+        <h1 className="text-3xl font-bold text-white">Welcome to our Chatbot</h1>
+        <p className="text-gray-300 text-xl">Start your conversation with a HI!</p>
       </header>
       <main>
         <button 
-          className="flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+          className="flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
           onClick={() => window.botpressWebChat.sendEvent({ type: 'show' })}
         >
           <FaRobot className="mr-2" /> Open Chat
