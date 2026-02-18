@@ -8,12 +8,12 @@ import gam from "../photos/group-children-teacher-playing-rainbow-600nw-20393590
 import Navbar from '../components/Navbar';
 
 
-const Games = () => {
+const Games = ({ hideNavbar = false }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Box>
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <div className='flex flex-col lg:flex-row gap-[2rem] mt-[4rem] justify-center mb-8'>
         <div className='bg-gradient-to-br from-gray-700 to-gray-950 p-3 items-center rounded-lg '>
           <img

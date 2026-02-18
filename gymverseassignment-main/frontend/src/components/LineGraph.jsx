@@ -84,7 +84,7 @@ useEffect(() => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '300px' }}>
       <Line data={data} options={options} />
     </div>
   );

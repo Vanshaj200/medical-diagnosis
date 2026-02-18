@@ -91,7 +91,7 @@ const DistanceBarGraph = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '300px' }}>
       {error ? (
         <p className='text-gray-400'>NO Data To show please do some activity</p>
       ) : (

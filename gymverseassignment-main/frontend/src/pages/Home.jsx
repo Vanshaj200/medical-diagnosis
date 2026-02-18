@@ -187,7 +187,7 @@ export default function Home() {
         </div>
 
         <div id='games'>
-          <Games />
+          <Games hideNavbar={true} />
         </div>
 
         {/* AI Bot Section */}

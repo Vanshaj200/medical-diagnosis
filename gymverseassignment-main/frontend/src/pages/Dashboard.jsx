@@ -118,7 +118,8 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     }
-  }, [getToken, user?.id])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
 
   useEffect(() => {
     const fetchWorkoutData = async () => {
@@ -165,6 +166,7 @@ const Dashboard = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom',
@@ -177,10 +179,6 @@ const Dashboard = () => {
         font: { size: 16 }
       },
     },
-    scales: {
-      y: { ticks: { color: 'gray' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-      x: { ticks: { color: 'gray' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
   };
 
   return (
